@@ -1,0 +1,1355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DAA Exam Prep</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0d0d;
+    --surface: #161616;
+    --surface2: #1e1e1e;
+    --border: #2a2a2a;
+    --text: #f0ede8;
+    --muted: #6b6b6b;
+    --accent: #f5c842;
+    --u1: #f87171;
+    --u2: #34d399;
+    --u3: #60a5fa;
+    --u4: #a78bfa;
+    --u5: #fb923c;
+    --u6: #2dd4bf;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Mono', monospace;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.4;
+  }
+
+  .wrap { max-width: 860px; margin: 0 auto; padding: 48px 24px 80px; position: relative; z-index: 1; }
+
+  .header { margin-bottom: 52px; }
+  .course-tag {
+    font-size: 11px;
+    letter-spacing: .12em;
+    color: var(--muted);
+    text-transform: uppercase;
+    border: 1px solid var(--border);
+    padding: 5px 12px;
+    border-radius: 2px;
+    display: inline-block;
+    margin-bottom: 14px;
+  }
+  h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(32px, 6vw, 54px);
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    color: var(--text);
+  }
+  h1 span { color: var(--accent); }
+  .header-meta { font-size: 12px; color: var(--muted); margin-top: 10px; letter-spacing: .04em; }
+
+  .overall-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 24px 28px;
+    margin-bottom: 40px;
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    flex-wrap: wrap;
+    opacity: 0;
+    animation: fadeUp .35s .02s ease forwards;
+  }
+  .overall-num {
+    font-family: 'Syne', sans-serif;
+    font-size: 52px;
+    font-weight: 800;
+    color: var(--accent);
+    line-height: 1;
+    min-width: 100px;
+  }
+  .overall-right { flex: 1; min-width: 200px; }
+  .overall-label { font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin-bottom: 12px; }
+  .master-bar-track { height: 6px; background: var(--surface2); border-radius: 2px; overflow: hidden; margin-bottom: 10px; }
+  .master-bar-fill { height: 100%; background: var(--accent); border-radius: 2px; transition: width .5s cubic-bezier(.4,0,.2,1); width: 0%; }
+  .overall-counts { font-size: 12px; color: var(--muted); }
+  .overall-counts span { color: var(--text); }
+
+  .reset-btn {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    padding: 8px 16px;
+    cursor: pointer;
+    transition: color .2s, border-color .2s;
+    white-space: nowrap;
+  }
+  .reset-btn:hover { color: var(--text); border-color: var(--muted); }
+
+  .units { display: flex; flex-direction: column; gap: 2px; }
+
+  .unit {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+    opacity: 0;
+    transform: translateY(12px);
+    animation: fadeUp .4s ease forwards;
+  }
+  .unit:nth-child(1){animation-delay:.05s}.unit:nth-child(2){animation-delay:.1s}
+  .unit:nth-child(3){animation-delay:.15s}.unit:nth-child(4){animation-delay:.2s}
+  .unit:nth-child(5){animation-delay:.25s}.unit:nth-child(6){animation-delay:.3s}
+
+  .unit-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 18px 22px;
+    cursor: pointer;
+    user-select: none;
+    transition: background .15s;
+  }
+  .unit-header:hover { background: var(--surface2); }
+
+  .unit-num {
+    font-family: 'Syne', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 2px;
+    flex-shrink: 0;
+    min-width: 68px;
+    text-align: center;
+  }
+  .unit-title-wrap { flex: 1; min-width: 0; }
+  .unit-title { font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 600; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .unit-subtitle { font-size: 11px; color: var(--muted); margin-top: 2px; letter-spacing: .03em; }
+
+  .unit-right { display: flex; align-items: center; gap: 14px; flex-shrink: 0; }
+  .unit-pct { font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 700; min-width: 38px; text-align: right; }
+  .mini-bar-track { width: 72px; height: 4px; background: var(--surface2); border-radius: 2px; overflow: hidden; }
+  .mini-bar-fill { height: 100%; border-radius: 2px; transition: width .4s cubic-bezier(.4,0,.2,1); width: 0%; }
+
+  .chevron { color: var(--muted); font-size: 10px; transition: transform .25s; flex-shrink: 0; }
+  .unit.open .chevron { transform: rotate(180deg); }
+
+  .unit-body { display: none; border-top: 1px solid var(--border); padding: 0 22px 18px; }
+  .unit.open .unit-body { display: block; }
+
+  .topics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 2px;
+    margin-top: 16px;
+  }
+
+  .topic-item {
+    display: flex; align-items: flex-start; gap: 10px;
+    padding: 10px 12px; border-radius: 3px; cursor: pointer;
+    transition: background .15s;
+  }
+  .topic-item:hover { background: var(--surface2); }
+
+  .cb {
+    width: 16px; height: 16px;
+    border: 1.5px solid var(--border);
+    border-radius: 2px; flex-shrink: 0; margin-top: 1px;
+    display: flex; align-items: center; justify-content: center;
+    transition: background .2s, border-color .2s;
+  }
+  .cb.checked { border-color: transparent; }
+  .cb.checked::after {
+    content: '';
+    width: 9px; height: 5px;
+    border-left: 2px solid #0d0d0d;
+    border-bottom: 2px solid #0d0d0d;
+    transform: rotate(-45deg) translateY(-1px);
+    display: block;
+  }
+
+  .topic-text { font-size: 12.5px; line-height: 1.5; transition: color .2s; }
+  .topic-item:not(.done) .topic-text { color: var(--text); }
+  .topic-item.done .topic-text { color: var(--muted); text-decoration: line-through; opacity: 0.5; }
+
+  .paper-section { margin-top: 22px; }
+  .paper-section-label {
+    font-size: 10px; letter-spacing: .12em; text-transform: uppercase;
+    color: var(--muted); border-top: 1px solid var(--border);
+    padding-top: 14px; margin-bottom: 10px;
+  }
+  .paper-pills { display: flex; flex-wrap: wrap; gap: 6px; }
+  .paper-pill {
+    font-size: 11px; padding: 5px 12px; border-radius: 2px;
+    border: 1px solid transparent; cursor: pointer;
+    transition: opacity .15s, transform .1s; line-height: 1.4; max-width: 100%;
+  }
+  .paper-pill:hover { opacity: 0.8; }
+  .paper-pill:active { transform: scale(0.97); }
+
+  .p-dec23s1  { background: rgba(248,113,113,0.1);  border-color: rgba(248,113,113,0.25);  color: #f87171; }
+  .p-dec23s2  { background: rgba(96,165,250,0.1);   border-color: rgba(96,165,250,0.25);   color: #60a5fa; }
+  .p-dec23re  { background: rgba(167,139,250,0.1);  border-color: rgba(167,139,250,0.25);  color: #a78bfa; }
+  .p-dec24ese { background: rgba(52,211,153,0.1);   border-color: rgba(52,211,153,0.25);   color: #34d399; }
+  .p-dec24re  { background: rgba(251,191,36,0.1);   border-color: rgba(251,191,36,0.25);   color: #fbbf24; }
+  .p-may23    { background: rgba(45,212,191,0.1);   border-color: rgba(45,212,191,0.25);   color: #2dd4bf; }
+  .p-may23re  { background: rgba(249,115,22,0.1);   border-color: rgba(249,115,22,0.25);   color: #fb923c; }
+
+  .paper-pill.done { opacity: 0.35; text-decoration: line-through; }
+
+  .u1-num{background:rgba(248,113,113,0.15);color:#f87171}
+  .u2-num{background:rgba(52,211,153,0.15);color:#34d399}
+  .u3-num{background:rgba(96,165,250,0.15);color:#60a5fa}
+  .u4-num{background:rgba(167,139,250,0.15);color:#a78bfa}
+  .u5-num{background:rgba(251,146,60,0.15);color:#fb923c}
+  .u6-num{background:rgba(45,212,191,0.15);color:#2dd4bf}
+
+  .u1-bar{background:#f87171}.u2-bar{background:#34d399}
+  .u3-bar{background:#60a5fa}.u4-bar{background:#a78bfa}
+  .u5-bar{background:#fb923c}.u6-bar{background:#2dd4bf}
+
+  .u1-pct{color:#f87171}.u2-pct{color:#34d399}
+  .u3-pct{color:#60a5fa}.u4-pct{color:#a78bfa}
+  .u5-pct{color:#fb923c}.u6-pct{color:#2dd4bf}
+
+  .u1-cb.checked{background:#f87171}.u2-cb.checked{background:#34d399}
+  .u3-cb.checked{background:#60a5fa}.u4-cb.checked{background:#a78bfa}
+  .u5-cb.checked{background:#fb923c}.u6-cb.checked{background:#2dd4bf}
+
+  .legend { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 28px; }
+  .legend-item { display: flex; align-items: center; gap: 6px; font-size: 10px; color: var(--muted); letter-spacing: .04em; }
+  .legend-dot { width: 8px; height: 8px; border-radius: 1px; flex-shrink: 0; }
+
+  .footer { margin-top: 60px; text-align: center; font-size: 11px; color: var(--muted); letter-spacing: .06em; }
+
+  /* TOP STATS ROW */
+  .top-stats { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 12px; }
+  .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; padding: 16px 18px; display: flex; flex-direction: column; gap: 4px; }
+  .stat-label { font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+  .stat-val { font-family: 'Syne', sans-serif; font-size: 26px; font-weight: 800; color: var(--accent); line-height: 1; }
+  .stat-sub { font-size: 11px; color: var(--muted); }
+
+  /* TOOLBAR */
+  .toolbar { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; align-items: center; }
+  .tb-btn { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); background: var(--surface); border: 1px solid var(--border); border-radius: 2px; padding: 7px 14px; cursor: pointer; transition: color .2s, border-color .2s, background .2s; white-space: nowrap; }
+  .tb-btn:hover { color: var(--text); border-color: var(--muted); }
+  .tb-btn.active { color: var(--bg); background: var(--accent); border-color: var(--accent); }
+
+  /* COUNTDOWN */
+  .countdown-bar { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; padding: 14px 20px; margin-bottom: 12px; display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
+  .cd-label { font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); flex-shrink: 0; }
+  .cd-display { font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 700; color: #fb923c; letter-spacing: .04em; }
+  .cd-input-wrap { display: flex; gap: 8px; align-items: center; margin-left: auto; }
+  .cd-input { background: var(--surface2); border: 1px solid var(--border); color: var(--text); font-family: 'DM Mono', monospace; font-size: 11px; padding: 5px 10px; border-radius: 2px; width: 140px; }
+  .cd-input:focus { outline: none; border-color: #fb923c; }
+  .cd-set-btn { font-family: 'DM Mono', monospace; font-size: 11px; color: #fb923c; background: none; border: 1px solid rgba(251,146,60,0.3); border-radius: 2px; padding: 5px 12px; cursor: pointer; }
+  .cd-set-btn:hover { background: rgba(251,146,60,0.1); }
+
+  /* STUDY TIMER */
+  .timer-bar { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; padding: 14px 20px; margin-bottom: 12px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+  .timer-label { font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+  .timer-display { font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 800; color: #2dd4bf; letter-spacing: .08em; min-width: 90px; }
+  .timer-controls { display: flex; gap: 6px; margin-left: auto; }
+  .t-btn { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: .06em; text-transform: uppercase; background: none; border: 1px solid var(--border); border-radius: 2px; padding: 6px 12px; cursor: pointer; color: var(--muted); transition: color .2s, border-color .2s; }
+  .t-btn:hover { color: var(--text); border-color: var(--muted); }
+  .t-btn.running { color: #2dd4bf; border-color: #2dd4bf; }
+  .session-info { font-size: 11px; color: var(--muted); }
+  .session-info span { color: #2dd4bf; }
+
+  /* NOTES */
+  .section-label { font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); border-top: 1px solid var(--border); padding-top: 14px; margin-bottom: 10px; margin-top: 20px; }
+  .notes-wrap { margin-top: 8px; }
+  .notes-textarea { width: 100%; background: var(--surface2); border: 1px solid var(--border); color: var(--text); font-family: 'DM Mono', monospace; font-size: 12px; padding: 10px 14px; border-radius: 3px; resize: vertical; min-height: 70px; transition: border-color .2s; letter-spacing: .02em; line-height: 1.6; }
+  .notes-textarea:focus { outline: none; border-color: var(--muted); }
+  .notes-textarea::placeholder { color: var(--muted); }
+
+  /* QUICK REF PANEL */
+  .qref-panel { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; margin-bottom: 12px; overflow: hidden; }
+  .qref-header { display: flex; align-items: center; justify-content: space-between; padding: 14px 20px; cursor: pointer; user-select: none; }
+  .qref-header:hover { background: var(--surface2); }
+  .qref-title { font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 700; color: #fb923c; letter-spacing: .04em; }
+  .qref-body { display: none; padding: 0 20px 18px; border-top: 1px solid var(--border); }
+  .qref-panel.open .qref-body { display: block; }
+  .qref-tabs { display: flex; gap: 4px; margin: 14px 0 12px; flex-wrap: wrap; }
+  .qref-tab { font-size: 10px; letter-spacing: .08em; text-transform: uppercase; padding: 5px 12px; border-radius: 2px; border: 1px solid var(--border); background: none; color: var(--muted); cursor: pointer; transition: .2s; }
+  .qref-tab:hover { color: var(--text); border-color: var(--muted); }
+  .qref-tab.active { background: var(--surface2); color: var(--text); border-color: var(--muted); }
+  .qref-content { display: none; }
+  .qref-content.active { display: block; }
+  .qref-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 8px; }
+  .qref-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 3px; padding: 12px 14px; }
+  .qref-card-title { font-family: 'Syne', sans-serif; font-size: 11px; font-weight: 700; color: var(--accent); letter-spacing: .06em; text-transform: uppercase; margin-bottom: 8px; }
+  .qref-card p { font-size: 11.5px; color: var(--muted); line-height: 1.7; }
+  .qref-card code { color: #2dd4bf; font-size: 11px; background: rgba(45,212,191,0.08); padding: 1px 5px; border-radius: 2px; }
+
+  /* FILTER BAR */
+  .filter-bar { display: flex; gap: 6px; margin-bottom: 8px; flex-wrap: wrap; align-items: center; }
+  .filter-btn { font-size: 10px; letter-spacing: .08em; text-transform: uppercase; padding: 5px 12px; border-radius: 2px; border: 1px solid var(--border); background: none; color: var(--muted); cursor: pointer; transition: .2s; font-family: 'DM Mono', monospace; }
+  .filter-btn:hover { color: var(--text); }
+  .filter-btn.active-all { color: var(--text); border-color: var(--muted); }
+  .filter-btn.active-dec23 { color: #f87171; border-color: rgba(248,113,113,0.4); background: rgba(248,113,113,0.08); }
+  .filter-btn.active-dec24 { color: #34d399; border-color: rgba(52,211,153,0.4); background: rgba(52,211,153,0.08); }
+  .filter-btn.active-may23 { color: #2dd4bf; border-color: rgba(45,212,191,0.4); background: rgba(45,212,191,0.08); }
+  .filter-btn.active-unsolved { color: #fbbf24; border-color: rgba(251,191,36,0.4); background: rgba(251,191,36,0.08); }
+
+  /* SECTION DIVIDER */
+  .section-divider { display: flex; align-items: center; gap: 12px; margin: 32px 0 20px; }
+  .section-divider-line { flex: 1; height: 1px; background: var(--border); }
+  .section-divider-label { font-family: 'Syne', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); padding: 4px 12px; border: 1px solid var(--border); border-radius: 2px; }
+
+  /* HEATMAP */
+  .heatmap-card { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; padding: 20px 24px; margin-bottom: 16px; }
+  .heatmap-title { font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 700; letter-spacing: .04em; color: var(--accent); margin-bottom: 4px; }
+  .heatmap-sub { font-size: 11px; color: var(--muted); margin-bottom: 18px; }
+  .heatmap-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 6px; }
+  .heatmap-col { display: flex; flex-direction: column; gap: 4px; }
+  .heatmap-col-label { font-family: 'Syne', sans-serif; font-size: 9px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; text-align: center; margin-bottom: 4px; padding: 3px 0; border-radius: 2px; }
+  .heatmap-cell { height: 22px; border-radius: 2px; cursor: pointer; transition: transform .15s, opacity .15s; position: relative; display: flex; align-items: center; justify-content: center; font-size: 8px; font-family: 'DM Mono', monospace; letter-spacing: .04em; }
+  .heatmap-cell:hover { transform: scale(1.08); opacity: 0.9; }
+  .heatmap-cell.heat-0 { background: var(--surface2); border: 1px solid var(--border); }
+  .heatmap-cell.heat-1 { background: rgba(245,200,66,0.12); border: 1px solid rgba(245,200,66,0.2); }
+  .heatmap-cell.heat-2 { background: rgba(245,200,66,0.30); border: 1px solid rgba(245,200,66,0.4); }
+  .heatmap-cell.heat-3 { background: rgba(245,200,66,0.60); border: 1px solid rgba(245,200,66,0.7); }
+  .heatmap-cell.heat-4 { background: rgba(245,200,66,0.90); border: 1px solid rgba(245,200,66,1); }
+  .heatmap-cell.heat-4 .hm-inner { color: #0d0d0d; }
+  .hm-inner { font-size: 9px; color: var(--muted); pointer-events: none; }
+  .heatmap-cell.heat-3 .hm-inner, .heatmap-cell.heat-2 .hm-inner { color: var(--text); }
+  .heatmap-legend { display: flex; align-items: center; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+  .heatmap-legend-label { font-size: 10px; color: var(--muted); letter-spacing: .06em; }
+  .heatmap-legend-items { display: flex; align-items: center; gap: 3px; }
+  .heatmap-legend-item { width: 14px; height: 14px; border-radius: 2px; }
+  .hm-l0 { background: var(--surface2); border: 1px solid var(--border); }
+  .hm-l1 { background: rgba(245,200,66,0.12); }
+  .hm-l2 { background: rgba(245,200,66,0.30); }
+  .hm-l3 { background: rgba(245,200,66,0.60); }
+  .hm-l4 { background: rgba(245,200,66,0.90); }
+  .heatmap-tooltip { position: fixed; background: var(--surface2); border: 1px solid var(--border); color: var(--text); font-size: 11px; padding: 6px 10px; border-radius: 3px; pointer-events: none; z-index: 999; max-width: 260px; line-height: 1.5; display: none; }
+
+  /* PAPER VIEWER */
+  .paper-viewer-card { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; margin-bottom: 12px; overflow: hidden; }
+  .paper-viewer-header { display: flex; align-items: center; gap: 14px; padding: 16px 22px; cursor: pointer; user-select: none; transition: background .15s; }
+  .paper-viewer-header:hover { background: var(--surface2); }
+  .paper-viewer-badge { font-size: 10px; letter-spacing: .1em; text-transform: uppercase; padding: 4px 10px; border-radius: 2px; border: 1px solid; flex-shrink: 0; }
+  .pvb-dec23 { color: #f87171; border-color: rgba(248,113,113,0.4); background: rgba(248,113,113,0.08); }
+  .pvb-dec24 { color: #34d399; border-color: rgba(52,211,153,0.4); background: rgba(52,211,153,0.08); }
+  .pvb-may23 { color: #2dd4bf; border-color: rgba(45,212,191,0.4); background: rgba(45,212,191,0.08); }
+  .paper-viewer-meta { flex: 1; }
+  .paper-viewer-title { font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 700; color: var(--text); }
+  .paper-viewer-detail { font-size: 11px; color: var(--muted); margin-top: 2px; }
+  .paper-viewer-chevron { color: var(--muted); font-size: 10px; transition: transform .25s; }
+  .paper-viewer-card.open .paper-viewer-chevron { transform: rotate(180deg); }
+  .paper-viewer-body { display: none; border-top: 1px solid var(--border); }
+  .paper-viewer-card.open .paper-viewer-body { display: block; }
+  .paper-viewer-tabs { display: flex; border-bottom: 1px solid var(--border); background: var(--surface2); overflow-x: auto; }
+  .paper-tab-btn { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: .08em; text-transform: uppercase; padding: 10px 16px; background: none; border: none; color: var(--muted); cursor: pointer; border-bottom: 2px solid transparent; transition: color .2s; white-space: nowrap; }
+  .paper-tab-btn:hover { color: var(--text); }
+  .paper-tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+  .paper-tab-pane { display: none; }
+  .paper-tab-pane.active { display: block; }
+  .pq-table { width: 100%; border-collapse: collapse; }
+  .pq-table th { font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); padding: 10px 16px; text-align: left; border-bottom: 1px solid var(--border); background: var(--surface2); }
+  .pq-table td { padding: 10px 16px; font-size: 12px; border-bottom: 1px solid rgba(42,42,42,0.5); vertical-align: top; line-height: 1.5; }
+  .pq-table tr:last-child td { border-bottom: none; }
+  .pq-table tr:hover td { background: var(--surface2); }
+  .pq-qno { font-family: 'Syne', sans-serif; font-size: 11px; font-weight: 700; white-space: nowrap; }
+  .pq-marks { font-size: 11px; color: var(--muted); white-space: nowrap; }
+  .pq-text { color: var(--text); }
+  .pq-tag { font-size: 9px; display: inline-block; padding: 2px 6px; border-radius: 2px; white-space: nowrap; }
+  .pq-tag.dec23s1 { color: #f87171; background: rgba(248,113,113,0.1); }
+  .pq-tag.dec23s2 { color: #60a5fa; background: rgba(96,165,250,0.1); }
+  .pq-tag.dec23re { color: #a78bfa; background: rgba(167,139,250,0.1); }
+  .pq-tag.dec24ese { color: #34d399; background: rgba(52,211,153,0.1); }
+  .pq-tag.dec24re { color: #fbbf24; background: rgba(251,191,36,0.1); }
+  .pq-tag.may23ese { color: #2dd4bf; background: rgba(45,212,191,0.1); }
+  .pq-tag.may23re { color: #fb923c; background: rgba(251,146,60,0.1); }
+  .paper-viewer-wrap { padding: 0; }
+
+  @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
+
+  @media (max-width: 520px) {
+    .overall-box { flex-direction: column; gap: 16px; }
+    .unit-header { padding: 14px 16px; gap: 10px; }
+    .unit-body { padding: 0 16px 14px; }
+    .mini-bar-track { width: 48px; }
+    .topics-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="header">
+    <div class="course-tag">CSUA31208 / CSUA32233 &nbsp;·&nbsp; TY Sem I &nbsp;·&nbsp; Pattern 2020</div>
+    <h1>DAA<br><span>Exam Prep</span></h1>
+    <div class="header-meta">Design &amp; Analysis of Algorithms &nbsp;·&nbsp; Computer Engineering</div>
+  </div>
+
+  <!-- COUNTDOWN -->
+  <div class="countdown-bar">
+    <div class="cd-label">📅 Exam Countdown</div>
+    <div class="cd-display" id="cd-display">Set your exam date →</div>
+    <div class="cd-input-wrap">
+      <input type="date" class="cd-input" id="cd-input">
+      <button class="cd-set-btn" onclick="setCountdown()">Set</button>
+    </div>
+  </div>
+
+  <!-- STUDY TIMER -->
+  <div class="timer-bar">
+    <div class="timer-label">⏱ Study Timer</div>
+    <div class="timer-display" id="timer-display">00:00:00</div>
+    <div class="session-info">Session: <span id="session-time">0 min</span></div>
+    <div class="timer-controls">
+      <button class="t-btn" id="timer-btn" onclick="toggleTimer()">▶ Start</button>
+      <button class="t-btn" onclick="resetTimer()">↺ Reset</button>
+    </div>
+  </div>
+
+  <!-- STATS -->
+  <div class="top-stats">
+    <div class="stat-card">
+      <div class="stat-label">Topics Done</div>
+      <div class="stat-val" id="stat-topics">0/0</div>
+      <div class="stat-sub">syllabus coverage</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Questions Solved</div>
+      <div class="stat-val" id="stat-qs">0/0</div>
+      <div class="stat-sub">past papers</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Units Complete</div>
+      <div class="stat-val" id="stat-units">0/6</div>
+      <div class="stat-sub">100% = done</div>
+    </div>
+  </div>
+
+  <!-- OVERALL -->
+  <div class="overall-box">
+    <div class="overall-num" id="overall-pct">0%</div>
+    <div class="overall-right">
+      <div class="overall-label">Overall preparation</div>
+      <div class="master-bar-track"><div class="master-bar-fill" id="master-bar"></div></div>
+      <div class="overall-counts">Topics: <span id="ov-topics">0/0</span> &nbsp;·&nbsp; Questions: <span id="ov-qs">0/0</span></div>
+    </div>
+    <button class="reset-btn" onclick="resetAll()">↺ Reset</button>
+  </div>
+
+  <!-- TOOLBAR -->
+  <div class="toolbar">
+    <button class="tb-btn" onclick="expandAll()">↓ Expand All</button>
+    <button class="tb-btn" onclick="collapseAll()">↑ Collapse All</button>
+    <button class="tb-btn" onclick="toggleQref()">⚡ Quick Ref</button>
+  </div>
+
+  <!-- QUICK REF PANEL -->
+  <div class="qref-panel" id="qref-panel">
+    <div class="qref-header" onclick="toggleQref()">
+      <span class="qref-title">⚡ Quick Reference</span>
+      <span style="color:var(--muted);font-size:10px">▾</span>
+    </div>
+    <div class="qref-body">
+      <div class="qref-tabs">
+        <button class="qref-tab active" onclick="showQref('analysis',event)">Algorithm Analysis</button>
+        <button class="qref-tab" onclick="showQref('greedy',event)">Greedy & DP</button>
+        <button class="qref-tab" onclick="showQref('backtrack',event)">Backtracking & B&B</button>
+        <button class="qref-tab" onclick="showQref('np',event)">NP-Completeness</button>
+        <button class="qref-tab" onclick="showQref('approx',event)">Approx & Randomized</button>
+        <button class="qref-tab" onclick="showQref('parallel',event)">Parallel</button>
+      </div>
+      <div class="qref-content active" id="qr-analysis">
+        <div class="qref-grid">
+          <div class="qref-card"><div class="qref-card-title">Asymptotic Notations</div><p><code>O(f(n))</code>: upper bound (worst case)<br><code>Ω(f(n))</code>: lower bound (best case)<br><code>Θ(f(n))</code>: tight bound (average)<br>O hierarchy: <code>1 &lt; logn &lt; n &lt; nlogn &lt; n² &lt; 2ⁿ</code></p></div>
+          <div class="qref-card"><div class="qref-card-title">Master's Theorem</div><p>T(n) = aT(n/b) + f(n)<br>Case 1: f(n)=O(n^logb_a-ε) → <code>Θ(n^logb_a)</code><br>Case 2: f(n)=Θ(n^logb_a) → <code>Θ(n^logb_a · logn)</code><br>Case 3: f(n)=Ω(n^logb_a+ε) → <code>Θ(f(n))</code></p></div>
+          <div class="qref-card"><div class="qref-card-title">Divide & Conquer</div><p><b>Quick Sort</b>: avg O(nlogn), worst O(n²)<br><b>Merge Sort</b>: always O(nlogn), O(n) space<br>Divide → Conquer → Combine<br>Recurrence: T(n)=2T(n/2)+n → Θ(nlogn)</p></div>
+          <div class="qref-card"><div class="qref-card-title">Complexity Classes</div><p>Linear: O(n), Log: O(logn)<br>Quadratic: O(n²), Cubic: O(n³)<br>Exponential: O(2ⁿ), Factorial: O(n!)<br>Polynomial: O(n^k) for constant k</p></div>
+        </div>
+      </div>
+      <div class="qref-content" id="qr-greedy">
+        <div class="qref-grid">
+          <div class="qref-card"><div class="qref-card-title">Greedy Strategy</div><p>Fractional Knapsack: sort by p/w ratio<br>Job Sequencing: sort by profit desc, assign latest slot<br>Huffman: always merge 2 lowest freq nodes<br>Greedy choice property + Optimal substructure</p></div>
+          <div class="qref-card"><div class="qref-card-title">0/1 Knapsack DP</div><p>V[i][w] = max profit using items 1..i, weight ≤ w<br>If w[i]>w: V[i][w]=V[i-1][w]<br>Else: max(V[i-1][w], p[i]+V[i-1][w-w[i]])<br>Time: O(nW), Space: O(nW)</p></div>
+          <div class="qref-card"><div class="qref-card-title">OBST</div><p>w(i,j), e(i,j), r(i,j) tables<br>e(i,j) = min over r of e(i,r-1)+e(r,j)+w(i,j)<br>w(i,j) = w(i,j-1)+q[j]+p[j]<br>Base: e(i,i)=q[i], w(i,i)=q[i]</p></div>
+          <div class="qref-card"><div class="qref-card-title">Multistage Graphs</div><p>Forward approach: cost(i,j) = min over successors<br>Backward: bcost(i,j) = min over predecessors<br>d[j] = min {c(j,l)+d[l]} for each stage<br>Time: O(V+E)</p></div>
+        </div>
+      </div>
+      <div class="qref-content" id="qr-backtrack">
+        <div class="qref-grid">
+          <div class="qref-card"><div class="qref-card-title">Backtracking</div><p>State space tree — depth-first search<br>Promising function checks constraints<br><b>N-Queens</b>: check col, diag, anti-diag<br><b>Graph Coloring</b>: no two adj nodes same color</p></div>
+          <div class="qref-card"><div class="qref-card-title">Branch & Bound</div><p><b>LIFO</b>: use stack (DFS-like)<br><b>FIFO</b>: use queue (BFS-like)<br><b>LC</b>: use priority queue — best first<br>Bound: upper bound for pruning (knapsack greedy)</p></div>
+          <div class="qref-card"><div class="qref-card-title">TSP Branch & Bound</div><p>Lower bound: sum of row/col minimums / 2<br>Reduce cost matrix: subtract row min, then col min<br>Best solution found = upper bound<br>Prune if lb ≥ current best</p></div>
+          <div class="qref-card"><div class="qref-card-title">0/1 Knapsack B&B</div><p>Upper bound = current profit + fractional fill of remaining<br>Sort items by p/w descending<br>LC search: explore node with best upper bound first<br>Kill node if ub ≤ best solution found</p></div>
+        </div>
+      </div>
+      <div class="qref-content" id="qr-np">
+        <div class="qref-grid">
+          <div class="qref-card"><div class="qref-card-title">P vs NP</div><p><b>P</b>: solvable in poly time (det.)<br><b>NP</b>: verifiable in poly time (non-det.)<br><b>NP-Complete</b>: NP + every NP reduces to it<br><b>NP-Hard</b>: at least as hard as NP-Complete</p></div>
+          <div class="qref-card"><div class="qref-card-title">NP-Complete Problems</div><p><b>3-SAT</b>: satisfiability of 3-literal clauses<br><b>Vertex Cover</b>: min set covering all edges<br><b>Clique</b>: find clique of size k<br><b>Circuit SAT</b>: first NP-Complete (Cook's theorem)</p></div>
+          <div class="qref-card"><div class="qref-card-title">Reduction Method</div><p>To show X is NP-Complete:<br>1. Show X ∈ NP (poly verifier)<br>2. Choose known NPC problem Y<br>3. Show Y ≤p X (Y reduces to X in poly time)<br>Transitivity of reductions</p></div>
+          <div class="qref-card"><div class="qref-card-title">Non-Deterministic Algo</div><p>Two phases: <b>guessing</b> + <b>verification</b><br>ndChoice(S): guesses from S in O(1)<br>ndAccept/ndReject: signals result<br>Polynomial non-det ≡ NP class</p></div>
+        </div>
+      </div>
+      <div class="qref-content" id="qr-approx">
+        <div class="qref-grid">
+          <div class="qref-card"><div class="qref-card-title">Approximation Algorithms</div><p>Performance ratio ρ(n): cost(approx)/cost(opt)<br><b>TSP 2-approx</b>: MST + DFS preorder walk<br>Works only when triangle inequality holds<br>No poly-time (1+ε)-approx for general TSP</p></div>
+          <div class="qref-card"><div class="qref-card-title">Randomized Algorithms</div><p><b>Randomized QS</b>: random pivot → expected O(nlogn)<br>Las Vegas: always correct, random time<br>Monte Carlo: random correct, fixed time<br>Expected time better than worst case</p></div>
+          <div class="qref-card"><div class="qref-card-title">Genetic Algorithm</div><p>1. Initialize population (chromosomes)<br>2. Evaluate fitness<br>3. Selection (roulette/tournament)<br>4. Crossover (single/double point)<br>5. Mutation (flip bit)<br>6. Repeat until convergence</p></div>
+          <div class="qref-card"><div class="qref-card-title">Simulated Annealing</div><p>Accept worse solution with prob e^(-Δ/T)<br>Temperature T decreases over time (cooling)<br>At T→0: acts like greedy<br>Avoids local minima; good for optimization</p></div>
+        </div>
+      </div>
+      <div class="qref-content" id="qr-parallel">
+        <div class="qref-grid">
+          <div class="qref-card"><div class="qref-card-title">PRAM Model</div><p><b>EREW</b>: exclusive read/write<br><b>CREW</b>: concurrent read, exclusive write<br><b>CRCW</b>: concurrent read/write<br>p processors, shared memory</p></div>
+          <div class="qref-card"><div class="qref-card-title">Parallel Analysis</div><p>Speedup S(n,p) = T(n,1)/T(n,p)<br>Efficiency E = S/p ≤ 1<br><b>Amdahl's Law</b>: S ≤ 1/(f+(1-f)/p)<br>f = serial fraction</p></div>
+          <div class="qref-card"><div class="qref-card-title">Brent's Theorem</div><p>If algo has t steps and total ops W:<br><code>T(p) ≤ W/p + t</code><br>Key insight: work/processors + critical path<br>Use to bound parallel time given p processors</p></div>
+          <div class="qref-card"><div class="qref-card-title">Parallel Patterns</div><p><b>Prefix sum</b>: O(logn) steps with n/2 processors<br><b>Matrix mult</b>: O(logn) using n³ processors<br><b>Min finding</b>: O(logn) steps, PRAM CRCW<br><b>List ranking</b>: pointer jumping technique</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FILTER -->
+  <div class="filter-bar">
+    <span style="font-size:10px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;line-height:2">Filter:</span>
+    <button class="filter-btn active-all" id="fb-all" onclick="setFilter('all')">All</button>
+    <button class="filter-btn" id="fb-dec23" onclick="setFilter('dec23')">Dec 2023</button>
+    <button class="filter-btn" id="fb-dec24" onclick="setFilter('dec24')">Dec 2024</button>
+    <button class="filter-btn" id="fb-may23" onclick="setFilter('may23')">May 2023</button>
+    <button class="filter-btn" id="fb-unsolved" onclick="setFilter('unsolved')">Unsolved</button>
+  </div>
+
+  <div class="units" id="units-wrap"></div>
+
+  <div class="footer">Track your progress · Check off topics as you study · All past papers included</div>
+</div>
+
+<!-- HEATMAP TOOLTIP -->
+<div class="heatmap-tooltip" id="heatmap-tooltip"></div>
+
+<!-- SECTION 2: HEATMAP + PAPERS -->
+<div class="wrap" style="padding-top:0">
+
+  <div class="section-divider">
+    <div class="section-divider-line"></div>
+    <div class="section-divider-label">📊 Analysis & Papers</div>
+    <div class="section-divider-line"></div>
+  </div>
+
+  <!-- HEATMAP -->
+  <div class="heatmap-card">
+    <div class="heatmap-title">🔥 Question Frequency Heatmap</div>
+    <div class="heatmap-sub">Topic importance by marks across all 7 exams — hotter = higher ROI for study time · Hover for details · Click to jump to unit</div>
+    <div class="heatmap-grid" id="heatmap-grid"></div>
+    <div class="heatmap-legend">
+      <span class="heatmap-legend-label">Low freq</span>
+      <div class="heatmap-legend-items">
+        <div class="heatmap-legend-item hm-l0"></div>
+        <div class="heatmap-legend-item hm-l1"></div>
+        <div class="heatmap-legend-item hm-l2"></div>
+        <div class="heatmap-legend-item hm-l3"></div>
+        <div class="heatmap-legend-item hm-l4"></div>
+      </div>
+      <span class="heatmap-legend-label">High freq</span>
+    </div>
+  </div>
+
+  <!-- PAPER VIEWERS -->
+  <div class="section-divider" style="margin-top:24px">
+    <div class="section-divider-line"></div>
+    <div class="section-divider-label">📄 Past Papers</div>
+    <div class="section-divider-line"></div>
+  </div>
+
+  <!-- DEC 2023 PAPERS -->
+  <div class="paper-viewer-card" id="pv-dec23">
+    <div class="paper-viewer-header" onclick="togglePaper('dec23')">
+      <span class="paper-viewer-badge pvb-dec23">Dec 2023</span>
+      <div class="paper-viewer-meta">
+        <div class="paper-viewer-title">December 2023 Exams</div>
+        <div class="paper-viewer-detail">Set 1 · Set 2 · Re-Exam &nbsp;·&nbsp; CSUA32233 · TY Sem I</div>
+      </div>
+      <span class="paper-viewer-chevron">▾</span>
+    </div>
+    <div class="paper-viewer-body">
+      <div class="paper-viewer-tabs">
+        <button class="paper-tab-btn active" onclick="switchPaperTab('dec23','all',this)">All</button>
+        <button class="paper-tab-btn" onclick="switchPaperTab('dec23','s1',this)">Set 1</button>
+        <button class="paper-tab-btn" onclick="switchPaperTab('dec23','s2',this)">Set 2</button>
+        <button class="paper-tab-btn" onclick="switchPaperTab('dec23','re',this)">Re-Exam</button>
+      </div>
+      <div class="paper-viewer-wrap">
+        <div class="paper-tab-pane active" id="pane-dec23-all"><table class="pq-table"><thead><tr><th>Paper</th><th>Question</th><th>Marks</th></tr></thead><tbody id="tbl-dec23-all"></tbody></table></div>
+        <div class="paper-tab-pane" id="pane-dec23-s1"><table class="pq-table"><thead><tr><th>Q.No</th><th>Question</th><th>Marks</th></tr></thead><tbody id="tbl-dec23-s1"></tbody></table></div>
+        <div class="paper-tab-pane" id="pane-dec23-s2"><table class="pq-table"><thead><tr><th>Q.No</th><th>Question</th><th>Marks</th></tr></thead><tbody id="tbl-dec23-s2"></tbody></table></div>
+        <div class="paper-tab-pane" id="pane-dec23-re"><table class="pq-table"><thead><tr><th>Q.No</th><th>Question</th><th>Marks</th></tr></thead><tbody id="tbl-dec23-re"></tbody></table></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DEC 2024 PAPERS -->
+  <div class="paper-viewer-card" id="pv-dec24">
+    <div class="paper-viewer-header" onclick="togglePaper('dec24')">
+      <span class="paper-viewer-badge pvb-dec24">Dec 2024</span>
+      <div class="paper-viewer-meta">
+        <div class="paper-viewer-title">December 2024 Exams</div>
+        <div class="paper-viewer-detail">ESE · Re-Exam &nbsp;·&nbsp; CSUA32233 · TY Sem I</div>
+      </div>
+      <span class="paper-viewer-chevron">▾</span>
+    </div>
+    <div class="paper-viewer-body">
+      <div class="paper-viewer-tabs">
+        <button class="paper-tab-btn active" onclick="switchPaperTab('dec24','all',this)">All</button>
+        <button class="paper-tab-btn" onclick="switchPaperTab('dec24','ese',this)">ESE</button>
+        <button class="paper-tab-btn" onclick="switchPaperTab('dec24','re',this)">Re-Exam</button>
+      </div>
+      <div class="paper-viewer-wrap">
+        <div class="paper-tab-pane active" id="pane-dec24-all"><table class="pq-table"><thead><tr><th>Paper</th><th>Question</th><th>Marks</th></tr></thead><tbody id="tbl-dec24-all"></tbody></table></div>
+        <div class="paper-tab-pane" id="pane-dec24-ese"><table class="pq-table"><thead><tr><th>Q.No</th><th>Question</th><th>Marks</th></tr></thead><tbody id="tbl-dec24-ese"></tbody></table></div>
+        <div class="paper-tab-pane" id="pane-dec24-re"><table class="pq-table"><thead><tr><th>Q.No</th><th>Question</th><th>Marks</th></tr></thead><tbody id="tbl-dec24-re"></tbody></table></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAY 2023 PAPERS -->
+  <div class="paper-viewer-card" id="pv-may23">
+    <div class="paper-viewer-header" onclick="togglePaper('may23')">
+      <span class="paper-viewer-badge pvb-may23">May 2023</span>
+      <div class="paper-viewer-meta">
+        <div class="paper-viewer-title">May 2023 Exams</div>
+        <div class="paper-viewer-detail">ESE · Re-Exam &nbsp;·&nbsp; CSUA32233 · TY Sem I</div>
+      </div>
+      <span class="paper-viewer-chevron">▾</span>
+    </div>
+    <div class="paper-viewer-body">
+      <div class="paper-viewer-tabs">
+        <button class="paper-tab-btn active" onclick="switchPaperTab('may23','all',this)">All</button>
+        <button class="paper-tab-btn" onclick="switchPaperTab('may23','ese',this)">ESE</button>
+        <button class="paper-tab-btn" onclick="switchPaperTab('may23','re',this)">Re-Exam</button>
+      </div>
+      <div class="paper-viewer-wrap">
+        <div class="paper-tab-pane active" id="pane-may23-all"><table class="pq-table"><thead><tr><th>Paper</th><th>Question</th><th>Marks</th></tr></thead><tbody id="tbl-may23-all"></tbody></table></div>
+        <div class="paper-tab-pane" id="pane-may23-ese"><table class="pq-table"><thead><tr><th>Q.No</th><th>Question</th><th>Marks</th></tr></thead><tbody id="tbl-may23-ese"></tbody></table></div>
+        <div class="paper-tab-pane" id="pane-may23-re"><table class="pq-table"><thead><tr><th>Q.No</th><th>Question</th><th>Marks</th></tr></thead><tbody id="tbl-may23-re"></tbody></table></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer" style="margin-top:32px">DAA Exam Prep · CSUA32233 · Dec 2023 (S1/S2/RE) · Dec 2024 (ESE/RE) · May 2023 (ESE/RE)</div>
+</div>
+
+<script>
+const DATA = [
+  {
+    id:'u1', num:'Unit I', color:'u1',
+    title:'Introduction & algorithm analysis',
+    sub:'Asymptotic notation · Master\'s theorem · Divide & Conquer',
+    topics:[
+      'Analysis of algorithms: best, average, worst case',
+      'Asymptotic notations: O, Ω, Θ',
+      'Master\'s theorem & recurrence relations',
+      'Classification of problems & solving strategies',
+      'Classification of time complexities (linear, logarithmic, etc.)',
+      'Divide and Conquer general strategy',
+      'Quick Sort — algorithm & complexity analysis',
+      'Merge Sort — algorithm & complexity analysis'
+    ],
+    questions:[
+      {tag:'Dec23-S1 Q1a', type:'p-dec23s1', text:'Best, worst, average case complexity for searching x in array [2M]'},
+      {tag:'Dec23-S2 Q1a', type:'p-dec23s2', text:'Time complexity of bubble sort using step count method [2M]'},
+      {tag:'Dec23-RE Q1a', type:'p-dec23re', text:'Divide and conquer strategy for genomic sequence analysis [5M]'},
+      {tag:'Dec23-RE Q1b', type:'p-dec23re', text:'Sorting algorithm for web page indexing; analysis [5M]'},
+      {tag:'Dec23-RE Q1c', type:'p-dec23re', text:'Solve T(n)=2T(n/2)+n²logn using Master\'s theorem [5M]'},
+      {tag:'Dec24-ESE Q1a', type:'p-dec24ese', text:'Solve T(n)=2T(n/2)+nlogn using Master\'s theorem [4M]'},
+      {tag:'Dec24-ESE Q1b', type:'p-dec24ese', text:'State whether 3n+2=O(n) and 100n+6=O(n) correct or not [4M]'},
+      {tag:'Dec24-ESE Q1c', type:'p-dec24ese', text:'Analyze merge sort and find its time complexity [4M]'},
+      {tag:'Dec24-RE Q1a', type:'p-dec24re', text:'Correct/incorrect: 3n+2=O(n), 100n+6=O(n); justify [4M]'},
+      {tag:'Dec24-RE Q1b', type:'p-dec24re', text:'Show 3n+2=θ(n) and 6.2ⁿ+n²=θ(2ⁿ) [4M]'},
+      {tag:'Dec24-RE Q1c', type:'p-dec24re', text:'Compute space complexity of Algorithm Sum(a,n) [4M]'}
+    ]
+  },
+  {
+    id:'u2', num:'Unit II', color:'u2',
+    title:'Greedy method & dynamic programming',
+    sub:'Knapsack · Job sequencing · Huffman · OBST · Multistage graphs',
+    topics:[
+      'Greedy method general strategy & principle of optimality',
+      'Fractional Knapsack problem',
+      'Job sequencing with deadlines',
+      'Huffman coding algorithm',
+      'Dynamic programming general strategy',
+      '0/1 Knapsack using dynamic programming',
+      'Optimal Binary Search Tree (OBST)',
+      'Multistage graphs'
+    ],
+    questions:[
+      {tag:'Dec23-S1 Q2a', type:'p-dec23s1', text:'Fractional Knapsack greedy: n=3,M=20,P=(36,35,18),W=(18,15,10) [2M]'},
+      {tag:'Dec23-S2 Q2a', type:'p-dec23s2', text:'Job sequencing greedy: n=5,P=(60,100,20,40,20),d=(2,1,3,2,1) [2M]'},
+      {tag:'Dec23-RE Q2a', type:'p-dec23re', text:'Fractional Knapsack: n=3,M=20,P=(50,60,48),W=(15,13,10) [5M]'},
+      {tag:'Dec23-RE Q2b', type:'p-dec23re', text:'Job sequencing: n=6,P=(50,45,40,30,25,10),d=(4,1,3,1,2,2) [5M]'},
+      {tag:'Dec23-RE Q2c', type:'p-dec23re', text:'0/1 Knapsack DP: n=3,w=(2,3,4),m=6,p=(1,2,5) [5M]'},
+      {tag:'Dec24-ESE Q2a', type:'p-dec24ese', text:'0/1 Knapsack DP: n=3,w=(1,2,2),m=4,p=(18,16,6) [4M]'},
+      {tag:'Dec24-ESE Q2b', type:'p-dec24ese', text:'Job sequencing greedy: n=7,P=(3,5,20,18,1,6,30),d=(1,3,4,3,2,1,2) [4M]'},
+      {tag:'Dec24-ESE Q2c', type:'p-dec24ese', text:'Huffman codes for 7 messages with frequencies (4,5,7,8,10,22,15) [4M]'},
+      {tag:'Dec24-RE Q2a', type:'p-dec24re', text:'0/1 Knapsack DP: 4 items with weights & values given [4M]'},
+      {tag:'Dec24-RE Q2b', type:'p-dec24re', text:'Job sequencing greedy: n=6,P=(30,20,15,10,5,1),d=(4,2,2,1,4,3) [4M]'},
+      {tag:'Dec24-RE Q2c', type:'p-dec24re', text:'Optimal Huffman codes for first 8 Fibonacci frequencies [4M]'}
+    ]
+  },
+  {
+    id:'u3', num:'Unit III', color:'u3',
+    title:'Backtracking & branch and bound',
+    sub:'N-Queens · Graph coloring · 0/1 Knapsack B&B · TSP B&B',
+    topics:[
+      'Backtracking general method & state space tree',
+      'N-Queens problem (4-queens, 8-queens)',
+      'Graph coloring using backtracking',
+      'LC search strategy vs FIFO vs LIFO',
+      'Branch and Bound general method',
+      '0/1 Knapsack using Branch and Bound',
+      'Traveling Salesperson Problem (TSP) using Branch and Bound'
+    ],
+    questions:[
+      {tag:'Dec23-S1 Q3a', type:'p-dec23s1', text:'0/1 Knapsack Backtracking: n=4,p=(10,10,12,18),m=15,w=(2,4,6,9) [6M]'},
+      {tag:'Dec23-S1 Q3b', type:'p-dec23s1', text:'4-Queens: justify LC is better than FIFO and LIFO [6M]'},
+      {tag:'Dec23-S2 Q3a', type:'p-dec23s2', text:'0/1 Knapsack Branch & Bound: n=4,p=(10,10,12,18),w=(2,4,6,9) [6M]'},
+      {tag:'Dec23-S2 Q3b', type:'p-dec23s2', text:'Graph coloring backtracking: 4 nodes, 3 colours; discuss complexity [6M]'},
+      {tag:'Dec23-RE Q3a', type:'p-dec23re', text:'LC vs LIFO: 0/1 Knapsack w=(5,4,3),p=(6,5,4),M=7 [5M]'},
+      {tag:'Dec23-RE Q3b', type:'p-dec23re', text:'TSP Branch & Bound: 4-city cost matrix given [5M]'},
+      {tag:'Dec23-RE Q3c', type:'p-dec23re', text:'4-Queens backtracking: without/with explicit/implicit constraints [5M]'},
+      {tag:'Dec24-ESE Q3a', type:'p-dec24ese', text:'Graph coloring problem using backtracking [2M]'},
+      {tag:'Dec24-ESE Q3b', type:'p-dec24ese', text:'Characteristics of backtracking strategy [2M]'},
+      {tag:'Dec24-ESE Q3c', type:'p-dec24ese', text:'8-Queens problem feasible sequence (6,4,7,1) [4M]'},
+      {tag:'Dec24-RE Q3a', type:'p-dec24re', text:'Graph coloring problem: discuss & analyze using backtracking [2M]'},
+      {tag:'Dec24-RE Q3b', type:'p-dec24re', text:'TSP and why it is a challenging computational problem [2M]'},
+      {tag:'Dec24-RE Q3c', type:'p-dec24re', text:'Generate at least 2 solutions for 5-queens problem [4M]'}
+    ]
+  },
+  {
+    id:'u4', num:'Unit IV', color:'u4',
+    title:'Intractable problems & NP-completeness',
+    sub:'P vs NP · NP-Hard · Vertex cover · 3-SAT · Hamiltonian cycle',
+    topics:[
+      'Tractable vs intractable problems',
+      'Polynomial and non-polynomial problems',
+      'Deterministic vs non-deterministic algorithms',
+      'P-class and NP-class problems',
+      'Polynomial problem reduction technique',
+      'NP-Complete: Vertex cover problem',
+      'NP-Complete: 3-SAT problem',
+      'NP-Hard: Hamiltonian cycle problem',
+      'Clique decision problem',
+      'Circuit satisfiability'
+    ],
+    questions:[
+      {tag:'Dec23-S1 Q4a', type:'p-dec23s1', text:'Find Clique for given graph; prove NP-Hard [5M]'},
+      {tag:'Dec23-S1 Q4b', type:'p-dec23s1', text:'3-SAT: 4 variables, 3 clauses; construct Hamiltonian cycle [5M]'},
+      {tag:'Dec23-S1 Q4c', type:'p-dec23s1', text:'Circuit satisfiability: identify satisfiable vs not satisfiable [5M]'},
+      {tag:'Dec23-S2 Q4a', type:'p-dec23s2', text:'Vertex cover for given graph; prove NP-Hard [5M]'},
+      {tag:'Dec23-S2 Q4b', type:'p-dec23s2', text:'3-SAT Hamiltonian cycle construction; interpret clauses [5M]'},
+      {tag:'Dec23-S2 Q4c', type:'p-dec23s2', text:'Non-deterministic sorting algorithm; compare deterministic vs non-deterministic [5M]'},
+      {tag:'Dec23-RE Q4a', type:'p-dec23re', text:'Demonstrate 3-CNF Satisfiability is NP-complete [5M]'},
+      {tag:'Dec23-RE Q4b', type:'p-dec23re', text:'Vertex cover resembles social networking; prove NP-Hard [5M]'},
+      {tag:'Dec23-RE Q4c', type:'p-dec23re', text:'Tractable vs intractable problems; algorithmic strategy for each [5M]'},
+      {tag:'Dec24-ESE Q4a', type:'p-dec24ese', text:'Polynomial complexity of algorithm; when do we claim it? [2M]'},
+      {tag:'Dec24-ESE Q4b', type:'p-dec24ese', text:'What is NP-Hard problem? [2M]'},
+      {tag:'Dec24-ESE Q4c', type:'p-dec24ese', text:'Is given search algorithm non-deterministic? Justify [4M]'},
+      {tag:'Dec24-RE Q4a', type:'p-dec24re', text:'Non-deterministic vs deterministic algorithm; how they differ [2M]'},
+      {tag:'Dec24-RE Q4b', type:'p-dec24re', text:'Prove Vertex Cover problem is NP-Complete [2M]'},
+      {tag:'Dec24-RE Q4c', type:'p-dec24re', text:'3-SAT problem; significance in computational complexity; relation to NP-complete [4M]'},
+      {tag:'May23-ESE Q1a', type:'p-may23', text:'Problem A verified in polynomial time; which of P/NP/NP-Hard/NP-Complete? [4M]'},
+      {tag:'May23-ESE Q1b', type:'p-may23', text:'Billboard placement → vertex cover; show NP-Complete [6M]'},
+      {tag:'May23-ESE Q1c', type:'p-may23', text:'Network tightly connected nodes → clique decision problem; NP-Hard [6M]'},
+      {tag:'May23-RE Q1a', type:'p-may23re', text:'Non-det polynomial time → which P/NP/NP-Hard category? [4M]'},
+      {tag:'May23-RE Q1b', type:'p-may23re', text:'Delivery route → directed Hamiltonian problem; NP-Hard [6M]'},
+      {tag:'May23-RE Q1c', type:'p-may23re', text:'Network security nodes → vertex cover decision problem; NP-Complete [6M]'}
+    ]
+  },
+  {
+    id:'u5', num:'Unit V', color:'u5',
+    title:'Approximation, randomized & natural algorithms',
+    sub:'Approx TSP · Randomized QS · Genetic Algorithm · Simulated Annealing',
+    topics:[
+      'Approximation algorithms general concept',
+      'TSP by approximation algorithm (2-approximate)',
+      'Approximating Max Clique',
+      'Randomized algorithms concept',
+      'Randomized QuickSort algorithm & complexity',
+      'Evolutionary algorithms & evolutionary computing',
+      'Genetic Algorithm: representation, selection, crossover, mutation',
+      'Simulated Annealing'
+    ],
+    questions:[
+      {tag:'Dec23-S1 Q5a', type:'p-dec23s1', text:'TSP approximation algorithm with example [5M]'},
+      {tag:'Dec23-S1 Q5b', type:'p-dec23s1', text:'Randomized quicksort on (10,20,30,40,50,60); time complexity [5M]'},
+      {tag:'Dec23-S1 Q5c', type:'p-dec23s1', text:'Two parent selection methods in genetic algorithms [5M]'},
+      {tag:'Dec23-S2 Q5a', type:'p-dec23s2', text:'Demonstrate approximation algorithm; performance vs optimal [5M]'},
+      {tag:'Dec23-S2 Q5b', type:'p-dec23s2', text:'Compare quicksort and randomized quicksort [5M]'},
+      {tag:'Dec23-S2 Q5c', type:'p-dec23s2', text:'Two genotype representation methods with examples [5M]'},
+      {tag:'Dec23-RE Q5a', type:'p-dec23re', text:'Randomized quicksort algorithm and time complexity [5M]'},
+      {tag:'Dec23-RE Q5b', type:'p-dec23re', text:'Genetic algorithm with suitable example [5M]'},
+      {tag:'Dec23-RE Q5c', type:'p-dec23re', text:'Mutation and crossover in GA with example [5M]'},
+      {tag:'Dec24-ESE Q5a', type:'p-dec24ese', text:'Compare quicksort with randomized quicksort [2M]'},
+      {tag:'Dec24-ESE Q5b', type:'p-dec24ese', text:'How does Genetic Algorithm mimic natural evolution? [2M]'},
+      {tag:'Dec24-ESE Q5c', type:'p-dec24ese', text:'Discuss and analyze TSP by approximation algorithm with example [4M]'},
+      {tag:'Dec24-RE Q5a', type:'p-dec24re', text:'What is a clique; how randomized algorithms find large cliques? [2M]'},
+      {tag:'Dec24-RE Q5b', type:'p-dec24re', text:'What is Simulated Annealing; how used for optimization? [2M]'},
+      {tag:'Dec24-RE Q5c', type:'p-dec24re', text:'Approximation algorithms for TSP; benefit of using them [4M]'},
+      {tag:'May23-ESE Q2a', type:'p-may23', text:'Approximation algorithm for non-tractable problem; performance vs optimal [4M]'},
+      {tag:'May23-ESE Q2b', type:'p-may23', text:'Randomized sorting for web page ranking; time complexity [6M]'},
+      {tag:'May23-ESE Q2c', type:'p-may23', text:'Circuit board drilling → TSP; solve using Natural Algorithm (GA) [6M]'},
+      {tag:'May23-RE Q2a', type:'p-may23re', text:'Design and analyze a randomized algorithm [4M]'},
+      {tag:'May23-RE Q2b', type:'p-may23re', text:'Package delivery → TSP; approximation algorithm for near-optimal [6M]'},
+      {tag:'May23-RE Q2c', type:'p-may23re', text:'Warehouse products → Natural Algorithm (GA) for knapsack; analyze [6M]'}
+    ]
+  },
+  {
+    id:'u6', num:'Unit VI', color:'u6',
+    title:'Parallel & concurrent algorithms',
+    sub:'PRAM · Amdahl\'s Law · Brent\'s theorem · Multithreading · Dining philosophers',
+    topics:[
+      'Sequential vs parallel computing',
+      'RAM and PRAM models',
+      'Amdahl\'s Law — speedup and efficiency',
+      'Brent\'s theorem',
+      'Parallel algorithm analysis (time complexity, speedup, efficiency)',
+      'Parallel addition/multiplication of numbers (prefix product)',
+      'Multithreaded matrix multiplication',
+      'PRAM algorithm for finding minimum in a set',
+      'List ranking problem using PRAM',
+      'Concurrent algorithms: Dining Philosophers problem'
+    ],
+    questions:[
+      {tag:'Dec23-S1 Q6a', type:'p-dec23s1', text:'Parallel technique for add/multiply/min/max; time complexity, speedup, efficiency [5M]'},
+      {tag:'Dec23-S1 Q6b', type:'p-dec23s1', text:'PRAM prefix product of 16 numbers {3,0.5,2,3,...} [5M]'},
+      {tag:'Dec23-S1 Q6c', type:'p-dec23s1', text:'Multithreaded matrix multiplication m×n and n×p; challenges [5M]'},
+      {tag:'Dec23-S2 Q6a', type:'p-dec23s2', text:'PRAM divide-and-conquer matrix multiplication; demo on 4×4 matrices [5M]'},
+      {tag:'Dec23-S2 Q6b', type:'p-dec23s2', text:'PRAM minimum of n numbers; Amdahl\'s law; demo on 8 numbers [5M]'},
+      {tag:'Dec23-S2 Q6c', type:'p-dec23s2', text:'Concurrent dining philosopher: deadlock, fairness, starvation, scalability [5M]'},
+      {tag:'Dec23-RE Q6a', type:'p-dec23re', text:'PRAM architecture in detail [5M]'},
+      {tag:'Dec23-RE Q6b', type:'p-dec23re', text:'Brent\'s theorem with suitable example [5M]'},
+      {tag:'Dec23-RE Q6c', type:'p-dec23re', text:'Parallel evaluation of expression tree ((7-(21/3))*3)+((9*(10-8))+5) [5M]'},
+      {tag:'Dec24-ESE Q6a', type:'p-dec24ese', text:'Amdahl\'s Law in context of parallel computing [2M]'},
+      {tag:'Dec24-ESE Q6b', type:'p-dec24ese', text:'Brent\'s theorem in parallel computing [2M]'},
+      {tag:'Dec24-ESE Q6c', type:'p-dec24ese', text:'Explain how multithreaded matrix multiplication works [4M]'},
+      {tag:'Dec24-RE Q6a', type:'p-dec24re', text:'Key factors in analysis of parallel algorithms; why speedup matters [2M]'},
+      {tag:'Dec24-RE Q6b', type:'p-dec24re', text:'Dining Philosopher problem and concurrent algorithm design issues [2M]'},
+      {tag:'Dec24-RE Q6c', type:'p-dec24re', text:'Parallel algorithm vs sequential algorithm; how they differ [4M]'},
+      {tag:'May23-ESE Q3a', type:'p-may23', text:'Parallel technique for add/multiply/min/max; time, speedup, efficiency [4M]'},
+      {tag:'May23-ESE Q3b', type:'p-may23', text:'PRAM list ranking: design, analyze, demo on given list [6M]'},
+      {tag:'May23-ESE Q3c', type:'p-may23', text:'PRAM matrix multiplication divide-and-conquer; level 1 demo on 8×8 [6M]'},
+      {tag:'May23-RE Q3a', type:'p-may23re', text:'Concurrent dining philosopher: deadlock, fairness, starvation, scalability [4M]'},
+      {tag:'May23-RE Q3b', type:'p-may23re', text:'PRAM prefix product of 16 numbers; Brent\'s theorem application [6M]'},
+      {tag:'May23-RE Q3c', type:'p-may23re', text:'PRAM minimum of n numbers; Amdahl\'s law; demo on {30,7,8,12,14,70,3,18} [6M]'}
+    ]
+  }
+];
+
+const state = {};
+DATA.forEach(u => {
+  state[u.id] = {
+    open: false,
+    topics: new Array(u.topics.length).fill(false),
+    questions: new Array(u.questions.length).fill(false),
+    notes: ''
+  };
+});
+
+let filterMode = 'all';
+let timerRunning = false, timerSecs = 0, timerInterval = null, sessionStart = null;
+
+// ---- PERSIST ----
+function save() {
+  try { localStorage.setItem('daa_prep_v2', JSON.stringify(state)); } catch(e) {}
+}
+function load() {
+  try {
+    const s = JSON.parse(localStorage.getItem('daa_prep_v2') || '{}');
+    DATA.forEach(u => {
+      if (s[u.id]) {
+        if (s[u.id].topics && s[u.id].topics.length === state[u.id].topics.length) state[u.id].topics = s[u.id].topics;
+        if (s[u.id].questions && s[u.id].questions.length === state[u.id].questions.length) state[u.id].questions = s[u.id].questions;
+        if (s[u.id].notes !== undefined) state[u.id].notes = s[u.id].notes;
+      }
+    });
+  } catch(e) {}
+  try { const ts = JSON.parse(localStorage.getItem('daa_timer')||'{}'); if(ts.secs) timerSecs=ts.secs; } catch(e) {}
+  try { const cd = localStorage.getItem('daa_cd'); if(cd) { document.getElementById('cd-input').value=cd; updateCountdown(cd); } } catch(e) {}
+}
+
+// ---- TIMER ----
+function pad(n) { return String(n).padStart(2,'0'); }
+function formatSecs(s) { return pad(Math.floor(s/3600))+':'+pad(Math.floor((s%3600)/60))+':'+pad(s%60); }
+function toggleTimer() {
+  if (timerRunning) {
+    clearInterval(timerInterval); timerRunning = false;
+    document.getElementById('timer-btn').textContent = '▶ Start';
+    document.getElementById('timer-btn').classList.remove('running');
+  } else {
+    timerRunning = true; sessionStart = sessionStart || Date.now();
+    document.getElementById('timer-btn').textContent = '⏸ Pause';
+    document.getElementById('timer-btn').classList.add('running');
+    timerInterval = setInterval(() => {
+      timerSecs++;
+      document.getElementById('timer-display').textContent = formatSecs(timerSecs);
+      document.getElementById('session-time').textContent = Math.round((Date.now()-sessionStart)/60000) + ' min';
+      try { localStorage.setItem('daa_timer', JSON.stringify({secs:timerSecs})); } catch(e) {}
+    }, 1000);
+  }
+}
+function resetTimer() {
+  clearInterval(timerInterval); timerRunning=false; timerSecs=0; sessionStart=null;
+  document.getElementById('timer-display').textContent='00:00:00';
+  document.getElementById('session-time').textContent='0 min';
+  document.getElementById('timer-btn').textContent='▶ Start';
+  document.getElementById('timer-btn').classList.remove('running');
+  try { localStorage.removeItem('daa_timer'); } catch(e) {}
+}
+
+// ---- COUNTDOWN ----
+function setCountdown() {
+  const v = document.getElementById('cd-input').value;
+  if (!v) return;
+  localStorage.setItem('daa_cd', v);
+  updateCountdown(v);
+}
+function updateCountdown(dateStr) {
+  const diff = new Date(dateStr+'T00:00:00') - new Date();
+  if (diff <= 0) { document.getElementById('cd-display').textContent = '🎓 Exam day!'; return; }
+  const days = Math.floor(diff/86400000), hrs = Math.floor((diff%86400000)/3600000);
+  document.getElementById('cd-display').textContent = `${days}d ${hrs}h remaining`;
+  setTimeout(() => updateCountdown(dateStr), 3600000);
+}
+
+// ---- QUICK REF ----
+function toggleQref() { document.getElementById('qref-panel').classList.toggle('open'); }
+function showQref(tab, e) {
+  document.querySelectorAll('.qref-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.qref-tab').forEach(el => el.classList.remove('active'));
+  document.getElementById('qr-'+tab).classList.add('active');
+  e.target.classList.add('active');
+}
+
+// ---- FILTER ----
+function setFilter(mode) {
+  filterMode = mode;
+  document.querySelectorAll('.filter-btn').forEach(b => { b.className = 'filter-btn'; });
+  const map = { all:'active-all', dec23:'active-dec23', dec24:'active-dec24', may23:'active-may23', unsolved:'active-unsolved' };
+  const btn = document.getElementById('fb-'+mode);
+  if (btn && map[mode]) btn.classList.add(map[mode]);
+  renderPills();
+}
+
+// ---- PROGRESS ----
+function getUnitProgress(uid) {
+  const u = DATA.find(x => x.id===uid), s = state[uid];
+  const tDone = s.topics.filter(Boolean).length, qDone = s.questions.filter(Boolean).length;
+  const total = u.topics.length + u.questions.length, done = tDone + qDone;
+  return { tDone, tTotal: u.topics.length, qDone, qTotal: u.questions.length, pct: total ? Math.round(done/total*100) : 0 };
+}
+function getOverall() {
+  let tD=0,tT=0,qD=0,qT=0,units=0;
+  DATA.forEach(u => { const p=getUnitProgress(u.id); tD+=p.tDone; tT+=p.tTotal; qD+=p.qDone; qT+=p.qTotal; if(p.pct===100) units++; });
+  return { tD, tT, qD, qT, units, pct: (tT+qT) ? Math.round((tD+qD)/(tT+qT)*100) : 0 };
+}
+function updateOverall() {
+  const o = getOverall();
+  document.getElementById('overall-pct').textContent = o.pct+'%';
+  document.getElementById('master-bar').style.width = o.pct+'%';
+  document.getElementById('ov-topics').textContent = o.tD+'/'+o.tT;
+  document.getElementById('ov-qs').textContent = o.qD+'/'+o.qT;
+  document.getElementById('stat-topics').textContent = o.tD+'/'+o.tT;
+  document.getElementById('stat-qs').textContent = o.qD+'/'+o.qT;
+  document.getElementById('stat-units').textContent = o.units+'/6';
+}
+function updateUnit(uid) {
+  const p = getUnitProgress(uid);
+  const bar = document.getElementById('mbar-'+uid), pct = document.getElementById('mpct-'+uid);
+  if (bar) bar.style.width = p.pct+'%';
+  if (pct) pct.textContent = p.pct+'%';
+}
+
+// ---- TOGGLES ----
+function toggleTopic(uid, idx) {
+  state[uid].topics[idx] = !state[uid].topics[idx];
+  const item = document.getElementById('ti-'+uid+'-'+idx), cb = document.getElementById('cb-'+uid+'-'+idx);
+  if (item) item.classList.toggle('done', state[uid].topics[idx]);
+  if (cb) cb.classList.toggle('checked', state[uid].topics[idx]);
+  updateUnit(uid); updateOverall(); save();
+}
+function toggleQuestion(uid, idx) {
+  state[uid].questions[idx] = !state[uid].questions[idx];
+  renderPills(); updateUnit(uid); updateOverall(); save();
+}
+function toggleUnit(uid) {
+  state[uid].open = !state[uid].open;
+  const card = document.getElementById('unit-'+uid);
+  if (card) card.classList.toggle('open', state[uid].open);
+}
+function saveNote(uid) { state[uid].notes = document.getElementById('note-'+uid).value; save(); }
+function expandAll() { DATA.forEach(u => { state[u.id].open=true; document.getElementById('unit-'+u.id).classList.add('open'); }); }
+function collapseAll() { DATA.forEach(u => { state[u.id].open=false; document.getElementById('unit-'+u.id).classList.remove('open'); }); }
+function resetAll() {
+  if (!confirm('Reset all progress?')) return;
+  DATA.forEach(u => {
+    state[u.id].topics = new Array(u.topics.length).fill(false);
+    state[u.id].questions = new Array(u.questions.length).fill(false);
+    u.topics.forEach((_,i) => { const it=document.getElementById('ti-'+u.id+'-'+i),cb=document.getElementById('cb-'+u.id+'-'+i); if(it)it.classList.remove('done'); if(cb)cb.classList.remove('checked'); });
+    updateUnit(u.id);
+  });
+  renderPills(); updateOverall(); save();
+}
+
+// ---- RENDER PILLS ----
+function typeMatch(q) {
+  if (filterMode === 'all') return true;
+  if (filterMode === 'dec23') return q.type.startsWith('p-dec23');
+  if (filterMode === 'dec24') return q.type.startsWith('p-dec24');
+  if (filterMode === 'may23') return q.type.startsWith('p-may23');
+  return true;
+}
+function renderPills() {
+  DATA.forEach(u => {
+    const wrap = document.getElementById('pills-'+u.id);
+    if (!wrap) return;
+    wrap.innerHTML = u.questions.map((q, i) => {
+      if (!typeMatch(q)) return '';
+      if (filterMode === 'unsolved' && state[u.id].questions[i]) return '';
+      const done = state[u.id].questions[i];
+      return `<div class="paper-pill ${q.type} ${done ? 'done' : ''}" id="qp-${u.id}-${i}" onclick="toggleQuestion('${u.id}', ${i})">
+        <strong>${q.tag}</strong> — ${q.text}
+      </div>`;
+    }).join('');
+  });
+}
+
+// ---- RENDER ----
+function render() {
+  const wrap = document.getElementById('units-wrap');
+  wrap.innerHTML = DATA.map(u => {
+    const p = getUnitProgress(u.id);
+    return `
+<div class="unit ${state[u.id].open ? 'open' : ''}" id="unit-${u.id}">
+  <div class="unit-header" onclick="toggleUnit('${u.id}')">
+    <span class="unit-num ${u.color}-num">${u.num}</span>
+    <div class="unit-title-wrap">
+      <div class="unit-title">${u.title}</div>
+      <div class="unit-subtitle">${u.sub}</div>
+    </div>
+    <div class="unit-right">
+      <div class="mini-bar-track"><div class="mini-bar-fill ${u.color}-bar" id="mbar-${u.id}" style="width:${p.pct}%"></div></div>
+      <span class="unit-pct ${u.color}-pct" id="mpct-${u.id}">${p.pct}%</span>
+    </div>
+    <span class="chevron">▾</span>
+  </div>
+  <div class="unit-body">
+    <div class="topics-grid" style="margin-top:16px">
+      ${u.topics.map((t, i) => `
+      <div class="topic-item ${state[u.id].topics[i] ? 'done' : ''}" id="ti-${u.id}-${i}" onclick="toggleTopic('${u.id}', ${i})">
+        <div class="cb ${u.color}-cb ${state[u.id].topics[i] ? 'checked' : ''}" id="cb-${u.id}-${i}"></div>
+        <span class="topic-text">${t}</span>
+      </div>`).join('')}
+    </div>
+    <div class="section-label">📝 Past Paper Questions</div>
+    <div class="paper-pills" id="pills-${u.id}" style="display:flex;flex-direction:column;gap:4px"></div>
+    <div class="section-label">✏️ Study Notes</div>
+    <div class="notes-wrap">
+      <textarea class="notes-textarea" id="note-${u.id}" placeholder="Write your notes, formulas, examples for this unit…" oninput="saveNote('${u.id}')">${state[u.id].notes}</textarea>
+    </div>
+  </div>
+</div>`;
+  }).join('');
+  renderPills();
+  updateOverall();
+}
+
+// ==============================
+// HEATMAP DATA
+// ==============================
+const HEATMAP_DATA = [
+  {
+    unit:'u1', label:'Unit I', color:'#f87171',
+    topics:[
+      {name:'Master\'s Theorem', counts:{dec23s1:0,dec23s2:0,dec23re:5,dec24ese:4,dec24re:0,may23:0,may23re:0}, note:'High value — solve T(n) problems'},
+      {name:'Asymptotic Notations O/Ω/Θ', counts:{dec23s1:2,dec23s2:2,dec23re:0,dec24ese:4,dec24re:8,may23:0,may23re:0}, note:'🔥 Every exam has notation questions'},
+      {name:'Quick Sort / Merge Sort', counts:{dec23s1:0,dec23s2:0,dec23re:5,dec24ese:4,may23:0,may23re:0}, note:'Sort analysis & complexity'},
+      {name:'Best/Avg/Worst Case', counts:{dec23s1:2,dec23s2:2,dec23re:0,dec24ese:0,dec24re:4,may23:0,may23re:0}, note:'Space & time step count'},
+    ]
+  },
+  {
+    unit:'u2', label:'Unit II', color:'#34d399',
+    topics:[
+      {name:'0/1 Knapsack DP', counts:{dec23s1:0,dec23s2:0,dec23re:5,dec24ese:4,dec24re:4,may23:0,may23re:0}, note:'🔥 Table construction — asked every year'},
+      {name:'Job Sequencing', counts:{dec23s1:2,dec23s2:2,dec23re:5,dec24ese:4,dec24re:4,may23:0,may23re:0}, note:'🔥 Both greedy approaches needed'},
+      {name:'Fractional Knapsack', counts:{dec23s1:2,dec23s2:0,dec23re:5,dec24ese:0,dec24re:0,may23:0,may23re:0}, note:'Sort by p/w ratio'},
+      {name:'Huffman Coding', counts:{dec23s1:0,dec23s2:0,dec23re:0,dec24ese:4,dec24re:4,may23:0,may23re:0}, note:'Build tree bottom-up'},
+    ]
+  },
+  {
+    unit:'u3', label:'Unit III', color:'#60a5fa',
+    topics:[
+      {name:'4/8-Queens Backtracking', counts:{dec23s1:0,dec23s2:0,dec23re:5,dec24ese:4,dec24re:4,may23:0,may23re:0}, note:'🔥 Draw state space tree'},
+      {name:'0/1 Knapsack B&B', counts:{dec23s1:6,dec23s2:6,dec23re:5,dec24ese:0,dec24re:0,may23:0,may23re:0}, note:'LC vs FIFO vs LIFO'},
+      {name:'Graph Coloring', counts:{dec23s1:0,dec23s2:6,dec23re:0,dec24ese:2,dec24re:2,may23:0,may23re:0}, note:'Backtracking, chromatic number'},
+      {name:'TSP Branch & Bound', counts:{dec23s1:0,dec23s2:0,dec23re:5,dec24ese:0,dec24re:2,may23:0,may23re:0}, note:'Reduce cost matrix'},
+    ]
+  },
+  {
+    unit:'u4', label:'Unit IV', color:'#a78bfa',
+    topics:[
+      {name:'Vertex Cover (NP-Complete)', counts:{dec23s1:0,dec23s2:5,dec23re:5,dec24ese:0,dec24re:2,may23:6,may23re:6}, note:'🔥 Prove NP-C via reduction'},
+      {name:'3-SAT Problem', counts:{dec23s1:5,dec23s2:5,dec23re:5,dec24ese:0,dec24re:4,may23:0,may23re:0}, note:'🔥 Hamiltonian cycle construction'},
+      {name:'P vs NP / NP-Hard', counts:{dec23s1:5,dec23s2:5,dec23re:5,dec24ese:2,dec24re:2,may23:4,may23re:4}, note:'Definitions + classification'},
+      {name:'Clique / Circuit SAT', counts:{dec23s1:5,dec23s2:5,dec23re:0,dec24ese:0,dec24re:0,may23:6,may23re:0}, note:'Prove NP-Hard by reduction'},
+    ]
+  },
+  {
+    unit:'u5', label:'Unit V', color:'#fb923c',
+    topics:[
+      {name:'TSP Approximation', counts:{dec23s1:5,dec23s2:5,dec23re:0,dec24ese:4,dec24re:4,may23:4,may23re:6}, note:'🔥 2-approx MST algorithm'},
+      {name:'Genetic Algorithm', counts:{dec23s1:5,dec23s2:5,dec23re:5,dec24ese:2,dec24re:0,may23:6,may23re:6}, note:'Crossover & mutation'},
+      {name:'Randomized QuickSort', counts:{dec23s1:5,dec23s2:5,dec23re:5,dec24ese:2,dec24re:0,may23:6,may23re:0}, note:'Expected O(nlogn)'},
+      {name:'Simulated Annealing', counts:{dec23s1:0,dec23s2:0,dec23re:0,dec24ese:0,dec24re:2,may23:0,may23re:0}, note:'Temperature cooling schedule'},
+    ]
+  },
+  {
+    unit:'u6', label:'Unit VI', color:'#2dd4bf',
+    topics:[
+      {name:'PRAM & Parallel Algorithms', counts:{dec23s1:5,dec23s2:5,dec23re:5,dec24ese:0,dec24re:0,may23:4,may23re:0}, note:'🔥 Add/min/matrix multiply'},
+      {name:'Amdahl\'s Law & Speedup', counts:{dec23s1:0,dec23s2:5,dec23re:0,dec24ese:2,dec24re:2,may23:4,may23re:6}, note:'Formula + demo calculation'},
+      {name:'Brent\'s Theorem', counts:{dec23s1:0,dec23s2:0,dec23re:5,dec24ese:2,dec24re:0,may23:0,may23re:6}, note:'T(p) ≤ W/p + t'},
+      {name:'Matrix Mult / List Ranking', counts:{dec23s1:5,dec23s2:5,dec23re:0,dec24ese:4,dec24re:4,may23:6,may23re:6}, note:'🔥 Both parallel approaches asked'},
+    ]
+  }
+];
+
+function buildHeatmap() {
+  const grid = document.getElementById('heatmap-grid');
+  grid.innerHTML = '';
+  HEATMAP_DATA.forEach(unit => {
+    const col = document.createElement('div');
+    col.className = 'heatmap-col';
+    const label = document.createElement('div');
+    label.className = 'heatmap-col-label';
+    label.style.cssText = `background:${unit.color}22;color:${unit.color};border:1px solid ${unit.color}44`;
+    label.textContent = unit.label;
+    col.appendChild(label);
+    unit.topics.forEach(t => {
+      const total = Object.values(t.counts).reduce((a,b)=>a+b, 0);
+      const heat = total === 0 ? 0 : total <= 5 ? 1 : total <= 12 ? 2 : total <= 22 ? 3 : 4;
+      const cell = document.createElement('div');
+      cell.className = `heatmap-cell heat-${heat}`;
+      cell.innerHTML = `<span class="hm-inner">${total > 0 ? total+'M' : ''}</span>`;
+      cell.addEventListener('mouseenter', (e) => {
+        const papers = Object.entries(t.counts).filter(([,v])=>v>0).map(([k,v])=>`${k}: ${v}M`).join(' · ');
+        const tip = document.getElementById('heatmap-tooltip');
+        tip.innerHTML = `<strong style="color:${unit.color}">${unit.label}</strong><br><span style="color:var(--text)">${t.name}</span><br><span style="color:var(--muted);font-size:10px">${papers || 'Not yet asked'}</span><br><span style="font-size:10px;color:#f5c842">${t.note}</span>`;
+        tip.style.display = 'block';
+        tip.style.left = (e.clientX+12)+'px';
+        tip.style.top = (e.clientY-10)+'px';
+      });
+      cell.addEventListener('mousemove', (e) => {
+        const tip = document.getElementById('heatmap-tooltip');
+        tip.style.left = (e.clientX+12)+'px'; tip.style.top = (e.clientY-10)+'px';
+      });
+      cell.addEventListener('mouseleave', () => { document.getElementById('heatmap-tooltip').style.display='none'; });
+      cell.addEventListener('click', () => {
+        const el = document.getElementById('unit-'+unit.unit);
+        if (el) { el.scrollIntoView({behavior:'smooth',block:'center'}); state[unit.unit].open=true; el.classList.add('open'); }
+        document.getElementById('heatmap-tooltip').style.display='none';
+      });
+      col.appendChild(cell);
+    });
+    grid.appendChild(col);
+  });
+}
+
+// ==============================
+// PAPER VIEWER DATA
+// ==============================
+const PAPERS = {
+  dec23s1: [
+    {qno:'Q1a',marks:'2M',text:'Best, worst, average case complexity for searching x in array'},
+    {qno:'Q2a',marks:'2M',text:'Fractional Knapsack greedy: n=3,M=20,P=(36,35,18),W=(18,15,10)'},
+    {qno:'Q3a',marks:'6M',text:'0/1 Knapsack Backtracking: n=4,p=(10,10,12,18),m=15,w=(2,4,6,9)'},
+    {qno:'Q3b',marks:'6M',text:'4-Queens: justify LC is better than FIFO and LIFO'},
+    {qno:'Q4a',marks:'5M',text:'Find Clique for given graph; prove NP-Hard'},
+    {qno:'Q4b',marks:'5M',text:'3-SAT: 4 variables, 3 clauses; construct Hamiltonian cycle'},
+    {qno:'Q4c',marks:'5M',text:'Circuit satisfiability: identify satisfiable vs not satisfiable'},
+    {qno:'Q5a',marks:'5M',text:'TSP approximation algorithm with example'},
+    {qno:'Q5b',marks:'5M',text:'Randomized quicksort on (10,20,30,40,50,60); time complexity'},
+    {qno:'Q5c',marks:'5M',text:'Two parent selection methods in genetic algorithms'},
+    {qno:'Q6a',marks:'5M',text:'Parallel technique for add/multiply/min/max; time complexity, speedup, efficiency'},
+    {qno:'Q6b',marks:'5M',text:'PRAM prefix product of 16 numbers {3,0.5,2,3,...}'},
+    {qno:'Q6c',marks:'5M',text:'Multithreaded matrix multiplication m×n and n×p; challenges'},
+  ],
+  dec23s2: [
+    {qno:'Q1a',marks:'2M',text:'Time complexity of bubble sort using step count method'},
+    {qno:'Q2a',marks:'2M',text:'Job sequencing greedy: n=5,P=(60,100,20,40,20),d=(2,1,3,2,1)'},
+    {qno:'Q3a',marks:'6M',text:'0/1 Knapsack Branch & Bound: n=4,p=(10,10,12,18),w=(2,4,6,9)'},
+    {qno:'Q3b',marks:'6M',text:'Graph coloring backtracking: 4 nodes, 3 colours; discuss complexity'},
+    {qno:'Q4a',marks:'5M',text:'Vertex cover for given graph; prove NP-Hard'},
+    {qno:'Q4b',marks:'5M',text:'3-SAT Hamiltonian cycle construction; interpret clauses'},
+    {qno:'Q4c',marks:'5M',text:'Non-deterministic sorting algorithm; compare deterministic vs non-deterministic'},
+    {qno:'Q5a',marks:'5M',text:'Demonstrate approximation algorithm; performance vs optimal'},
+    {qno:'Q5b',marks:'5M',text:'Compare quicksort and randomized quicksort'},
+    {qno:'Q5c',marks:'5M',text:'Two genotype representation methods with examples'},
+    {qno:'Q6a',marks:'5M',text:'PRAM divide-and-conquer matrix multiplication; demo on 4×4 matrices'},
+    {qno:'Q6b',marks:'5M',text:'PRAM minimum of n numbers; Amdahl\'s law; demo on 8 numbers'},
+    {qno:'Q6c',marks:'5M',text:'Concurrent dining philosopher: deadlock, fairness, starvation, scalability'},
+  ],
+  dec23re: [
+    {qno:'Q1a',marks:'5M',text:'Divide and conquer strategy for genomic sequence analysis'},
+    {qno:'Q1b',marks:'5M',text:'Sorting algorithm for web page indexing; analysis'},
+    {qno:'Q1c',marks:'5M',text:'Solve T(n)=2T(n/2)+n²logn using Master\'s theorem'},
+    {qno:'Q2a',marks:'5M',text:'Fractional Knapsack: n=3,M=20,P=(50,60,48),W=(15,13,10)'},
+    {qno:'Q2b',marks:'5M',text:'Job sequencing: n=6,P=(50,45,40,30,25,10),d=(4,1,3,1,2,2)'},
+    {qno:'Q2c',marks:'5M',text:'0/1 Knapsack DP: n=3,w=(2,3,4),m=6,p=(1,2,5)'},
+    {qno:'Q3a',marks:'5M',text:'LC vs LIFO: 0/1 Knapsack w=(5,4,3),p=(6,5,4),M=7'},
+    {qno:'Q3b',marks:'5M',text:'TSP Branch & Bound: 4-city cost matrix given'},
+    {qno:'Q3c',marks:'5M',text:'4-Queens backtracking: without/with explicit/implicit constraints'},
+    {qno:'Q4a',marks:'5M',text:'Demonstrate 3-CNF Satisfiability is NP-complete'},
+    {qno:'Q4b',marks:'5M',text:'Vertex cover resembles social networking; prove NP-Hard'},
+    {qno:'Q4c',marks:'5M',text:'Tractable vs intractable problems; algorithmic strategy for each'},
+    {qno:'Q5a',marks:'5M',text:'Randomized quicksort algorithm and time complexity'},
+    {qno:'Q5b',marks:'5M',text:'Genetic algorithm with suitable example'},
+    {qno:'Q5c',marks:'5M',text:'Mutation and crossover in GA with example'},
+    {qno:'Q6a',marks:'5M',text:'PRAM architecture in detail'},
+    {qno:'Q6b',marks:'5M',text:'Brent\'s theorem with suitable example'},
+    {qno:'Q6c',marks:'5M',text:'Parallel evaluation of expression tree ((7-(21/3))*3)+((9*(10-8))+5)'},
+  ],
+  dec24ese: [
+    {qno:'Q1a',marks:'4M',text:'Solve T(n)=2T(n/2)+nlogn using Master\'s theorem'},
+    {qno:'Q1b',marks:'4M',text:'State whether 3n+2=O(n) and 100n+6=O(n) correct or not'},
+    {qno:'Q1c',marks:'4M',text:'Analyze merge sort and find its time complexity'},
+    {qno:'Q2a',marks:'4M',text:'0/1 Knapsack DP: n=3,w=(1,2,2),m=4,p=(18,16,6)'},
+    {qno:'Q2b',marks:'4M',text:'Job sequencing greedy: n=7,P=(3,5,20,18,1,6,30),d=(1,3,4,3,2,1,2)'},
+    {qno:'Q2c',marks:'4M',text:'Huffman codes for 7 messages with frequencies (4,5,7,8,10,22,15)'},
+    {qno:'Q3a',marks:'2M',text:'Graph coloring problem using backtracking'},
+    {qno:'Q3b',marks:'2M',text:'Characteristics of backtracking strategy'},
+    {qno:'Q3c',marks:'4M',text:'8-Queens problem feasible sequence (6,4,7,1)'},
+    {qno:'Q4a',marks:'2M',text:'Polynomial complexity of algorithm; when do we claim it?'},
+    {qno:'Q4b',marks:'2M',text:'What is NP-Hard problem?'},
+    {qno:'Q4c',marks:'4M',text:'Is given search algorithm non-deterministic? Justify'},
+    {qno:'Q5a',marks:'2M',text:'Compare quicksort with randomized quicksort'},
+    {qno:'Q5b',marks:'2M',text:'How does Genetic Algorithm mimic natural evolution?'},
+    {qno:'Q5c',marks:'4M',text:'Discuss and analyze TSP by approximation algorithm with example'},
+    {qno:'Q6a',marks:'2M',text:'Amdahl\'s Law in context of parallel computing'},
+    {qno:'Q6b',marks:'2M',text:'Brent\'s theorem in parallel computing'},
+    {qno:'Q6c',marks:'4M',text:'Explain how multithreaded matrix multiplication works'},
+  ],
+  dec24re: [
+    {qno:'Q1a',marks:'4M',text:'Correct/incorrect: 3n+2=O(n), 100n+6=O(n); justify'},
+    {qno:'Q1b',marks:'4M',text:'Show 3n+2=θ(n) and 6.2ⁿ+n²=θ(2ⁿ)'},
+    {qno:'Q1c',marks:'4M',text:'Compute space complexity of Algorithm Sum(a,n)'},
+    {qno:'Q2a',marks:'4M',text:'0/1 Knapsack DP: 4 items with weights & values given'},
+    {qno:'Q2b',marks:'4M',text:'Job sequencing greedy: n=6,P=(30,20,15,10,5,1),d=(4,2,2,1,4,3)'},
+    {qno:'Q2c',marks:'4M',text:'Optimal Huffman codes for first 8 Fibonacci frequencies'},
+    {qno:'Q3a',marks:'2M',text:'Graph coloring problem: discuss & analyze using backtracking'},
+    {qno:'Q3b',marks:'2M',text:'TSP and why it is a challenging computational problem'},
+    {qno:'Q3c',marks:'4M',text:'Generate at least 2 solutions for 5-queens problem'},
+    {qno:'Q4a',marks:'2M',text:'Non-deterministic vs deterministic algorithm; how they differ'},
+    {qno:'Q4b',marks:'2M',text:'Prove Vertex Cover problem is NP-Complete'},
+    {qno:'Q4c',marks:'4M',text:'3-SAT problem; significance in computational complexity; relation to NP-complete'},
+    {qno:'Q5a',marks:'2M',text:'What is a clique; how randomized algorithms find large cliques?'},
+    {qno:'Q5b',marks:'2M',text:'What is Simulated Annealing; how used for optimization?'},
+    {qno:'Q5c',marks:'4M',text:'Approximation algorithms for TSP; benefit of using them'},
+    {qno:'Q6a',marks:'2M',text:'Key factors in analysis of parallel algorithms; why speedup matters'},
+    {qno:'Q6b',marks:'2M',text:'Dining Philosopher problem and concurrent algorithm design issues'},
+    {qno:'Q6c',marks:'4M',text:'Parallel algorithm vs sequential algorithm; how they differ'},
+  ],
+  may23ese: [
+    {qno:'Q1a',marks:'4M',text:'Problem A verified in polynomial time; which of P/NP/NP-Hard/NP-Complete?'},
+    {qno:'Q1b',marks:'6M',text:'Billboard placement → vertex cover; show NP-Complete'},
+    {qno:'Q1c',marks:'6M',text:'Network tightly connected nodes → clique decision problem; NP-Hard'},
+    {qno:'Q2a',marks:'4M',text:'Approximation algorithm for non-tractable problem; performance vs optimal'},
+    {qno:'Q2b',marks:'6M',text:'Randomized sorting for web page ranking; time complexity'},
+    {qno:'Q2c',marks:'6M',text:'Circuit board drilling → TSP; solve using Natural Algorithm (GA)'},
+    {qno:'Q3a',marks:'4M',text:'Parallel technique for add/multiply/min/max; time, speedup, efficiency'},
+    {qno:'Q3b',marks:'6M',text:'PRAM list ranking: design, analyze, demo on given list'},
+    {qno:'Q3c',marks:'6M',text:'PRAM matrix multiplication divide-and-conquer; level 1 demo on 8×8'},
+  ],
+  may23re: [
+    {qno:'Q1a',marks:'4M',text:'Non-det polynomial time → which P/NP/NP-Hard category?'},
+    {qno:'Q1b',marks:'6M',text:'Delivery route → directed Hamiltonian problem; NP-Hard'},
+    {qno:'Q1c',marks:'6M',text:'Network security nodes → vertex cover decision problem; NP-Complete'},
+    {qno:'Q2a',marks:'4M',text:'Design and analyze a randomized algorithm'},
+    {qno:'Q2b',marks:'6M',text:'Package delivery → TSP; approximation algorithm for near-optimal'},
+    {qno:'Q2c',marks:'6M',text:'Warehouse products → Natural Algorithm (GA) for knapsack; analyze'},
+    {qno:'Q3a',marks:'4M',text:'Concurrent dining philosopher: deadlock, fairness, starvation, scalability'},
+    {qno:'Q3b',marks:'6M',text:'PRAM prefix product of 16 numbers; Brent\'s theorem application'},
+    {qno:'Q3c',marks:'6M',text:'PRAM minimum of n numbers; Amdahl\'s law; demo on {30,7,8,12,14,70,3,18}'},
+  ]
+};
+
+const TAG_CLASS = { dec23s1:'dec23s1', dec23s2:'dec23s2', dec23re:'dec23re', dec24ese:'dec24ese', dec24re:'dec24re', may23ese:'may23ese', may23re:'may23re' };
+const TAG_LABEL = { dec23s1:'Dec23 S1', dec23s2:'Dec23 S2', dec23re:'Dec23 RE', dec24ese:'Dec24 ESE', dec24re:'Dec24 RE', may23ese:'May23 ESE', may23re:'May23 RE' };
+
+function buildPaperRows(papers, showPaperTag) {
+  return papers.map(([pkey, rows]) => rows.map(r => {
+    const tagHtml = showPaperTag ? `<span class="pq-tag ${TAG_CLASS[pkey]}">${TAG_LABEL[pkey]}</span> ` : '';
+    return `<tr><td class="pq-qno">${tagHtml}${r.qno}</td><td class="pq-text">${r.text}</td><td class="pq-marks">${r.marks}</td></tr>`;
+  }).join('')).join('');
+}
+
+function buildPaperTables() {
+  // Dec 2023
+  document.getElementById('tbl-dec23-all').innerHTML = buildPaperRows([['dec23s1',PAPERS.dec23s1],['dec23s2',PAPERS.dec23s2],['dec23re',PAPERS.dec23re]], true);
+  document.getElementById('tbl-dec23-s1').innerHTML = buildPaperRows([['dec23s1',PAPERS.dec23s1]], false);
+  document.getElementById('tbl-dec23-s2').innerHTML = buildPaperRows([['dec23s2',PAPERS.dec23s2]], false);
+  document.getElementById('tbl-dec23-re').innerHTML = buildPaperRows([['dec23re',PAPERS.dec23re]], false);
+  // Dec 2024
+  document.getElementById('tbl-dec24-all').innerHTML = buildPaperRows([['dec24ese',PAPERS.dec24ese],['dec24re',PAPERS.dec24re]], true);
+  document.getElementById('tbl-dec24-ese').innerHTML = buildPaperRows([['dec24ese',PAPERS.dec24ese]], false);
+  document.getElementById('tbl-dec24-re').innerHTML = buildPaperRows([['dec24re',PAPERS.dec24re]], false);
+  // May 2023
+  document.getElementById('tbl-may23-all').innerHTML = buildPaperRows([['may23ese',PAPERS.may23ese],['may23re',PAPERS.may23re]], true);
+  document.getElementById('tbl-may23-ese').innerHTML = buildPaperRows([['may23ese',PAPERS.may23ese]], false);
+  document.getElementById('tbl-may23-re').innerHTML = buildPaperRows([['may23re',PAPERS.may23re]], false);
+}
+
+function togglePaper(type) {
+  document.getElementById('pv-'+type).classList.toggle('open');
+}
+function switchPaperTab(paperType, tabId, btn) {
+  const card = document.getElementById('pv-'+paperType);
+  card.querySelectorAll('.paper-tab-pane').forEach(p => p.classList.remove('active'));
+  card.querySelectorAll('.paper-tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('pane-'+paperType+'-'+tabId).classList.add('active');
+  btn.classList.add('active');
+}
+
+load();
+render();
+buildHeatmap();
+buildPaperTables();
+</script>
+</body>
+</html>
